@@ -9,6 +9,7 @@ module.exports = (env, options) => {
   const conf = {
     entry: {
       app: [
+        '@babel/polyfill',
         './src/index.js',
       ],
     },
