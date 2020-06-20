@@ -7,12 +7,10 @@ module.exports = (env, options) => {
   const isProduction = options.mode === 'production';
   const isDevelopment = !isProduction;
   const conf = {
-    entry: {
-      app: [
-        '@babel/polyfill',
-        './src/index.js',
-      ],
-    },
+    entry: [
+      '@babel/polyfill',
+      './src/index.jsx',
+    ],
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: '[name].js',
