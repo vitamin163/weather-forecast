@@ -1,43 +1,46 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Container } from 'react-bootstrap';
-// import axios from 'axios';
-// import { actions } from '../slices';
+import { Container, Navbar } from 'react-bootstrap';
+import Weather from './Weather.jsx';
+import getUrl from '../utils';
+import Search from './Search.jsx';
+import Error from './Error.jsx';
 import getData from '../slices/asyncActions';
 
 const App = () => {
   const dispatch = useDispatch();
   const place = useSelector((state) => state.place);
 
-  const getUrl = (query = 'москва') => {
-    if (typeof query === 'object') {
-      return `https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/weather?lat=${query.latitude}&lon=${query.longitude}&lang=ru&appid=1b016a8b0ea74f00ed53c8bed01c52ec&units=imperial`;
-    }
-    return `https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/weather?q=${query}&lang=ru&appid=1b016a8b0ea74f00ed53c8bed01c52ec`;
-  };
-
-  const geolocation = new Promise(
-    (resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject),
-  );
   useEffect(() => {
     async function asyncWrap() {
-      const { coords } = await geolocation;
-      const coordinates = { latitude: coords.latitude, longitude: coords.longitude };
-      const url = getUrl(coordinates);
-      console.log(url);
-      dispatch(getData(url));
+      try {
+        const { coords } = await new Promise(
+          (resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject),
+        );
+        const coordinates = { latitude: coords.latitude, longitude: coords.longitude };
+        const url = getUrl(coordinates);
+        await dispatch(getData(url));
+      } catch {
+        dispatch(getData(getUrl()));
+      }
     }
     asyncWrap();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const { data: { name } } = place;
-  const { data: { weather } } = place;
-  console.log(weather);
+
   return (
     <Container>
-      <div>{name}</div>
+      <Navbar bg="primary" variant="dark" expand="lg">
+        <Navbar.Brand>Прогноз погоды</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Search />
+        </Navbar.Collapse>
+      </Navbar>
+      {place.init && <Weather />}
+      {!place.init && place.requestState === 'REQUEST' && <div>Загрузка...</div>}
+      {!place.init && place.requestState === 'FAILURE' && <Error>Не удалось загрузить данные</Error>}
     </Container>
   );
 };
-
 export default App;

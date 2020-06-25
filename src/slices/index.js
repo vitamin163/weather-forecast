@@ -1,18 +1,15 @@
 import { combineReducers } from 'redux';
 import place, { actions as placeActions } from './place';
-import requestState, { actions as requestActions } from './requestState';
-import geolocation, { actions as geolocationActions } from './geolocation';
+import url, { actions as urlActions } from './url';
 
 export default combineReducers({
   place,
-  requestState,
-  geolocation,
+  url,
 });
 
 const actions = {
   ...placeActions,
-  ...requestActions,
-  ...geolocationActions,
+  ...urlActions,
 };
 
 export { actions };
