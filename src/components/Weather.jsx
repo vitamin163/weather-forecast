@@ -8,7 +8,7 @@ import Error from './Error.jsx';
 const Weather = () => {
   const place = useSelector((state) => state.place);
 
-  const iconUrl = `http://openweathermap.org/img/wn/${place.icon}@2x.png`;
+  const iconUrl = `https://openweathermap.org/img/wn/${place.icon}@2x.png`;
   const getTemp = (temp) => {
     if (temp < 0) {
       return `-${temp}`;
