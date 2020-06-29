@@ -10,14 +10,11 @@ const Weather = () => {
 
   const iconUrl = `https://openweathermap.org/img/wn/${place.icon}@2x.png`;
   const getTemp = (temp) => {
-    if (temp < 0) {
-      return `-${temp}`;
-    } if (temp > 0) {
+    if (temp > 0) {
       return `+${temp}`;
     }
     return temp;
   };
-
   return (
 
     <Jumbotron>
@@ -25,7 +22,7 @@ const Weather = () => {
       {place.requestState === 'FAILURE' && <Error>Не удалось обновить данные</Error>}
       <Row>
         <Col className="align-self-center" md="auto"><h3>Локация: {place.name}</h3></Col>
-        <Col className="align-self-center" md="auto"><h1><Badge variant={Math.sign(place.temp) ? 'warning' : 'primary'}>{getTemp(place.temp)}°</Badge></h1></Col>
+        <Col className="align-self-center" md="auto"><h1><Badge variant={place.temp > 0 ? 'warning' : 'primary'}>{getTemp(place.temp)}°</Badge></h1></Col>
         <Col className="align-self-center" md="auto"><img src={iconUrl} alt="weather" /></Col>
         <Col className="align-self-center" md="auto">{place.description}</Col>
       </Row>
